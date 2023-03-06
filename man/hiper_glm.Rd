@@ -4,15 +4,16 @@
 \alias{hiper_glm}
 \title{Sequence optimize}
 \usage{
-hiper_glm(design, outcome, model = "linear")
+hiper_glm(design, outcome, model = "linear", option = NULL)
 }
 \arguments{
 \item{design}{matrix, the design matrix X for the predictors.}
 
 \item{outcome}{vector, the output Y for the response.}
 
-\item{model}{the model to be used. The default is set as 'linear' to use the linear model;
-otherwise use 'logit' for}
+\item{model}{the model to be used. The default is set as 'linear' to use the linear model.}
+
+\item{option}{a list specifies the options for model solving, currently supporting 'mle_solver' only.}
 }
 \value{
 A list including the information of the fitted model

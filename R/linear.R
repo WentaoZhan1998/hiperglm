@@ -66,7 +66,7 @@ mle_BFGS <- function(design, outcome) {
 #' @return Estimate of the linear coefficients
 #'
 mle_pinv <- function(design, outcome) {
-  L = crossprod(design)
-  beta = backsolve(t(L), forwardsolve(L, crossprod(design, outcome)))
+  L = chol(crossprod(design))
+  beta = backsolve(L, forwardsolve(t(L), crossprod(design, outcome)))
   return(beta)
 }

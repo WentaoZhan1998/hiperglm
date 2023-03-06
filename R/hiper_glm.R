@@ -7,6 +7,7 @@
 #' @param design matrix, the design matrix X for the predictors.
 #' @param outcome vector, the output Y for the response.
 #' @param model the model to be used. The default is set as 'linear' to use the linear model.
+#' @param option a list specifies the options for model solving, currently supporting 'mle_solver' only.
 #'
 #' @return A list including the information of the fitted model
 #'
@@ -16,7 +17,6 @@ hiper_glm <- function(design, outcome, model = "linear", option = NULL) {
   if (!(model %in% supported_model)) {
     stop(sprintf("The model %s is not supported.", model))
   }
-  int <- F
   if (model == "linear") {
     if (option$mle_solver == "pinv") {
       beta <- mle_pinv(design, outcome)

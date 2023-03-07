@@ -15,5 +15,5 @@ mle_pinv(design, outcome)
 Estimate of the linear coefficients
 }
 \description{
-Calculate the MLE of linear coefficients using pseudo-inverse
+Calculate the MLE of linear coefficients using pseudo-inverse for the linear model
 }

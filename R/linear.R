@@ -1,6 +1,6 @@
 #' log-likelihood under linear model
 #'
-#' Calculate the log-likelihood
+#' Calculate the log-likelihood for the linear model
 #'
 #' @details
 #'
@@ -11,13 +11,14 @@
 #'
 #' @return log-likelihood under linear model
 
-log_likelihood <- function(design, outcome, beta, noise_var) {
-  .5 * crossprod(outcome - crossprod(t(design), beta))[1, 1] / noise_var
+log_likelihood_linear <- function(design, outcome, beta, noise_var) {
+  -.5 * crossprod(outcome - crossprod(t(design), beta))[1, 1] / noise_var
+  #-sum((outcome - design %*% beta)^2) / 2 / noise_var
 }
 
 #' Gradient for the likelihood under linear model
 #'
-#' Calculate the gradient
+#' Calculate the gradient for the linear model
 #'
 #' @details
 #'
@@ -29,12 +30,12 @@ log_likelihood <- function(design, outcome, beta, noise_var) {
 #' @return Gradient for the likelihood under linear model
 
 grad_linear <- function(design, outcome, beta, noise_var) {
-  -(crossprod(design, outcome) - crossprod(crossprod(design), beta)) / noise_var
+  (crossprod(design, outcome) - crossprod(crossprod(design), beta)) / noise_var
 }
 
 #' MLE for linear coefficients
 #'
-#' Calculate the MLE of linear coefficients using BFGS
+#' Calculate the MLE of linear coefficients using BFGS for the linear model
 #'
 #' @details
 #'
@@ -43,20 +44,17 @@ grad_linear <- function(design, outcome, beta, noise_var) {
 #'
 #' @return Estimate of the linear coefficients
 #'
-mle_BFGS <- function(design, outcome) {
-  log_lkl <- function(beta, noise_var = 1) {
-    log_likelihood(design, outcome, beta, noise_var)
-  }
-  grad <- function(beta, noise_var = 1) {
-    grad_linear(design, outcome, beta, noise_var)
-  }
-  beta <- optim(rep(0, ncol(design)), log_lkl, grad)$par
-  return(beta)
+mle_BFGS_linear <- function(design, outcome) {
+  return(
+    mle_BFGS(design = design, outcome = outcome,
+             fun = log_likelihood_linear, grad = grad_linear,
+             noise_var = 1)
+    )
 }
 
 #' MLE for linear coefficients
 #'
-#' Calculate the MLE of linear coefficients using pseudo-inverse
+#' Calculate the MLE of linear coefficients using pseudo-inverse for the linear model
 #'
 #' @details
 #'
@@ -66,7 +64,7 @@ mle_BFGS <- function(design, outcome) {
 #' @return Estimate of the linear coefficients
 #'
 mle_pinv <- function(design, outcome) {
-  L = chol(crossprod(design))
-  beta = backsolve(L, forwardsolve(t(L), crossprod(design, outcome)))
+  L <- chol(crossprod(design))
+  beta <- backsolve(L, forwardsolve(t(L), crossprod(design, outcome)))
   return(beta)
 }

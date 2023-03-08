@@ -22,7 +22,7 @@ hiper_glm <- function(design, outcome, model = "linear", option = NULL) {
       beta <- mle_pinv(design, outcome)
     }
     if (option$mle_solver == "BFGS") {
-      beta <- mle_BFGS(design, outcome)
+      beta <- mle_BFGS_linear(design, outcome)
     }
     offsets <- crossprod(t(design), beta)
     res <- outcome - offsets
@@ -35,7 +35,7 @@ hiper_glm <- function(design, outcome, model = "linear", option = NULL) {
     if (option$mle_solver == "BFGS") {
       beta <- mle_BFGS_logit(design, outcome)
     }
-    offsets <- Outcome_est(design, beta)
+    offsets <- outcome_est(design, beta)
     res <- outcome - offsets
     beta <- as.vector(beta)
   }

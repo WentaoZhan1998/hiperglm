@@ -1,7 +1,9 @@
 test_that("Gradients least-sq coincide", {
-  n_obs <- 32; n_pred <- 4
+  n_obs <- 32
+  n_pred <- 4
   data <- simulate_data(n_obs, n_pred, model = "linear", seed = 1918)
-  design <- data$design; outcome <- data$outcome
+  design <- data$design
+  outcome <- data$outcome
   beta <- rep(0, n_pred)
   beta_theory <- grad_linear(design, outcome, beta, noise_var = 1)
   log_lkl <- function(beta, noise_var = 1) {
@@ -12,9 +14,11 @@ test_that("Gradients least-sq coincide", {
 })
 
 test_that("Gradients logit coincide", {
-  n_obs <- 32; n_pred <- 4
+  n_obs <- 32
+  n_pred <- 4
   data <- simulate_data(n_obs, n_pred, model = "logit", seed = 1918)
-  design <- data$design; outcome <- data$outcome
+  design <- data$design
+  outcome <- data$outcome
   beta <- rep(0, n_pred)
   beta_theory <- grad_logit(design, outcome, beta)
   log_lkl <- function(beta) {
@@ -25,9 +29,11 @@ test_that("Gradients logit coincide", {
 })
 
 test_that("linalg and optim least-sq coincide", {
-  n_obs <- 32; n_pred <- 4
+  n_obs <- 32
+  n_pred <- 4
   data <- simulate_data(n_obs, n_pred, model = "linear", seed = 1918)
-  design <- data$design; outcome <- data$outcome
+  design <- data$design
+  outcome <- data$outcome
   beta <- rep(0, n_pred)
   via_linalg_out <- hiper_glm(
     design, outcome,
@@ -44,12 +50,15 @@ test_that("linalg and optim least-sq coincide", {
 })
 
 test_that("Newton and bfgs outputs coincide on logit model", {
-  n_obs <- 32; n_pred <- 4
-  data <- simulate_data(n_obs, n_pred, model = 'logit', seed = 1918)
-  design <- data$design; outcome <- data$outcome
-  via_Newton_out <- hiper_glm(design, outcome, model = 'logit', option = list(mle_solver = 'Newton'))
+  n_obs <- 32
+  n_pred <- 4
+  data <- simulate_data(n_obs, n_pred, model = "logit", seed = 1918)
+  design <- data$design
+  outcome <- data$outcome
+  via_Newton_out <- hiper_glm(design, outcome, model = "logit", option = list(mle_solver = "Newton"))
   via_bfgs_out <- hiper_glm(
-    design, outcome, model = 'logit', option = list(mle_solver = 'BFGS')
+    design, outcome,
+    model = "logit", option = list(mle_solver = "BFGS")
   )
   expect_true(are_all_close(
     coef(via_Newton_out), coef(via_bfgs_out),

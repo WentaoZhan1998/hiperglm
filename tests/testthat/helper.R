@@ -1,10 +1,3 @@
-are_all_close <- function(v, w, abs_tol = 1e-6, rel_tol = 1e-6) {
-  abs_diff <- abs(v - w)
-  are_all_within_atol <- all(abs_diff < abs_tol)
-  are_all_within_rtol <- all(abs_diff < rel_tol * pmax(abs(v), abs(w)))
-  return(are_all_within_atol && are_all_within_rtol)
-}
-
 approx_grad <- function(func, x, dx = .Machine$double.eps^(1 / 3)) {
   numerical_grad <- rep(0, length(x))
   for (i in 1:length(x)) {
@@ -18,12 +11,11 @@ approx_grad <- function(func, x, dx = .Machine$double.eps^(1 / 3)) {
 
 simulate_data <- function(
     n_obs, n_pred, model = "linear", intercept = NULL,
-    coef_true = NULL, design = NULL, seed = NULL, option = list()
-) {
+    coef_true = NULL, design = NULL, seed = NULL, option = list()) {
   if (!is.null(seed)) {
     set.seed(seed)
   }
-  if ((model != "linear")  && !is.null(option$signal_to_noise)) {
+  if ((model != "linear") && !is.null(option$signal_to_noise)) {
     warning(paste(
       "The `signal_to_noise` option is currently unsupported for",
       "non-linear models and will be ignored."
@@ -43,7 +35,7 @@ simulate_data <- function(
     design <- cbind(rep(1, n_obs), design)
   }
   expected_mean <- as.vector(design %*% coef_true)
-  if (model == 'linear') {
+  if (model == "linear") {
     signal_to_noise <- option$signal_to_noise
     if (is.null(signal_to_noise)) {
       signal_to_noise <- 0.1

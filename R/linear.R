@@ -44,12 +44,12 @@ grad_linear <- function(design, outcome, beta, noise_var) {
 #'
 #' @return Estimate of the linear coefficients
 #'
-mle_BFGS <- function(design, outcome) {
-  beta <- optim(rep(0, ncol(design)), log_likelihood_linear, grad_linear,
-                design = design, outcome = outcome, noise_var = 1,
-                method = 'BFGS',
-                control = list(fnscale = -1))$par
-  return(beta)
+mle_BFGS_linear <- function(design, outcome) {
+  return(
+    mle_BFGS(design = design, outcome = outcome,
+             fun = log_likelihood_linear, grad = grad_linear,
+             noise_var = 1)
+    )
 }
 
 #' MLE for linear coefficients
@@ -64,7 +64,7 @@ mle_BFGS <- function(design, outcome) {
 #' @return Estimate of the linear coefficients
 #'
 mle_pinv <- function(design, outcome) {
-  L = chol(crossprod(design))
-  beta = backsolve(L, forwardsolve(t(L), crossprod(design, outcome)))
+  L <- chol(crossprod(design))
+  beta <- backsolve(L, forwardsolve(t(L), crossprod(design, outcome)))
   return(beta)
 }

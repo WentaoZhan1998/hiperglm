@@ -13,7 +13,7 @@
 #'
 #' @export
 hiper_glm <- function(design, outcome, model = "linear", option = NULL) {
-  supported_model <- c("linear")
+  supported_model <- c("linear", "logit")
   if (!(model %in% supported_model)) {
     stop(sprintf("The model %s is not supported.", model))
   }
@@ -22,9 +22,20 @@ hiper_glm <- function(design, outcome, model = "linear", option = NULL) {
       beta <- mle_pinv(design, outcome)
     }
     if (option$mle_solver == "BFGS") {
-      beta <- mle_BFGS(design, outcome)
+      beta <- mle_BFGS_linear(design, outcome)
     }
     offsets <- crossprod(t(design), beta)
+    res <- outcome - offsets
+    beta <- as.vector(beta)
+  }
+  if (model == "logit") {
+    if (option$mle_solver == "Newton") {
+      beta <- mle_Newton_logit(design, outcome)
+    }
+    if (option$mle_solver == "BFGS") {
+      beta <- mle_BFGS_logit(design, outcome)
+    }
+    offsets <- outcome_est(design, beta)
     res <- outcome - offsets
     beta <- as.vector(beta)
   }

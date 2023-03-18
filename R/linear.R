@@ -63,8 +63,12 @@ mle_BFGS_linear <- function(design, outcome) {
 #'
 #' @return Estimate of the linear coefficients
 #'
-mle_pinv <- function(design, outcome) {
-  L <- chol(crossprod(design))
-  beta <- backsolve(L, forwardsolve(t(L), crossprod(design, outcome)))
+mle_pinv <- function(design, outcome, method = 'QR') {
+  if(method == 'QR'){
+    beta = QR_solve(design, outcome)
+  }
+  if(method == 'chol'){
+    beta = chol_solve(design, outcome)
+  }
   return(beta)
 }

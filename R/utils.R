@@ -40,3 +40,20 @@ mle_BFGS <- function(design, outcome, fun, grad, ...) {
   )$par
   return(beta)
 }
+
+QR_solve = function(design, outcome){
+  QR = qr(design)
+  beta <- backsolve(QR$qr, qr.qty(QR, outcome))
+  return(beta)
+}
+
+QR_solve_rcpp <- function(X, y) {
+  .Call('_hiperglm_QR_solve_rcpp', PACKAGE = 'hiperglm', X, y)
+}
+
+chol_solve = function(design, outcome){
+  L <- chol(crossprod(design))
+  beta <- backsolve(L, forwardsolve(t(L), crossprod(design, outcome)))
+  return(beta)
+}
+

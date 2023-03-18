@@ -4,7 +4,7 @@
 \alias{mle_Newton_logit}
 \title{MLE for linear coefficients}
 \usage{
-mle_Newton_logit(design, outcome, max_iter = 1000)
+mle_Newton_logit(design, outcome, max_iter = 1000, method = "solve")
 }
 \arguments{
 \item{design}{matrix, the design matrix X for the predictors.}

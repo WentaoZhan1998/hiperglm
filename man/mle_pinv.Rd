@@ -4,7 +4,7 @@
 \alias{mle_pinv}
 \title{MLE for linear coefficients}
 \usage{
-mle_pinv(design, outcome)
+mle_pinv(design, outcome, method = "QR")
 }
 \arguments{
 \item{design}{matrix, the design matrix X for the predictors.}

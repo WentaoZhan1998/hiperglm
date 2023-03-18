@@ -65,3 +65,31 @@ test_that("Newton and bfgs outputs coincide on logit model", {
     abs_tol = 1e-2, rel_tol = 1e-2
   ))
 })
+
+test_that("QR and chol outputs coincide on logit model", {
+  n_obs <- 32
+  n_pred <- 4
+  data <- simulate_data(n_obs, n_pred, model = "logit", seed = 1918)
+  design <- data$design
+  outcome <- data$outcome
+  beta_chol <- mle_Newton_logit(design, outcome, method = 'chol')
+  beta_QR <- mle_Newton_logit(design, outcome, method = 'QR')
+  expect_true(are_all_close(
+    beta_chol, beta_QR,
+    abs_tol = 1e-6, rel_tol = 1e-6
+  ))
+})
+
+test_that("QR_R and QR_rcpp coincide", {
+  n_obs <- 32
+  n_pred <- 4
+  data <- simulate_data(n_obs, n_pred, model = "logit", seed = 1918)
+  design <- data$design
+  outcome <- data$outcome
+  beta_R <- QR_solve(design, outcome)
+  beta_rcpp <- QR_solve_rcpp(design, outcome)
+  expect_true(are_all_close(
+    beta_R, beta_rcpp,
+    abs_tol = 1e-6, rel_tol = 1e-6
+  ))
+})
